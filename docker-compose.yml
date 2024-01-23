@@ -1,0 +1,28 @@
+version: '3'
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb"]
+    networks:
+      - mynetwork
+
+  payment-service-nest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - dynamodb
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
