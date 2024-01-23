@@ -1,4 +1,4 @@
 export enum MetodoPagamento {
-  MERCADO_PAGO,
-  DINHEIRO,
+  MERCADO_PAGO = 'MERCADO_PAGO',
+  DINHEIRO = 'DINHEIRO',
 }
