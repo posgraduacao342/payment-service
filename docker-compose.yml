@@ -1,15 +1,5 @@
 version: '3'
 services:
-  dynamodb:
-    image: amazon/dynamodb-local
-    ports:
-      - "8000:8000"
-    expose:
-      - "8000"
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb"]
-    networks:
-      - mynetwork
-    
   mongodb:
     image: mongo:6.0
     container_name: mongodb
