@@ -1,137 +1,39 @@
-import { Pagamento } from 'src/domain/entities/Pagamento';
-import { PagamentoRepositoryPort } from './PagamentoRepositoryPort';
 import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
 import {
-  GetCommand,
-  GetCommandInput,
-  PutCommand,
-  PutCommandInput,
-  ScanCommandInput,
-  UpdateCommand,
-  UpdateCommandInput,
-} from '@aws-sdk/lib-dynamodb';
-import { DbClientsProvider } from '../config/DbClientProvider';
-import { ScanCommand } from '@aws-sdk/client-dynamodb';
-import { PagamentoMapper } from '../mappers/PagamentoMapper';
+  PagamentoEntity,
+  PagamentoEntityDocument,
+} from '../entities/PagamentoEntity';
+import { InjectModel } from '@nestjs/mongoose';
+import { PagamentoRepositoryPort } from './PagamentoRepositoryPort';
 
 @Injectable()
 export class PagamentoRepository implements PagamentoRepositoryPort {
-  private readonly tableName: string;
+  constructor(
+    @InjectModel(PagamentoEntity.name)
+    private readonly pagamento: Model<PagamentoEntityDocument>,
+  ) {}
 
-  constructor(private readonly dbClientsProvider: DbClientsProvider) {
-    this.tableName = 'pagamentos';
-  }
-
-  async obterPagamentos(): Promise<Pagamento[]> {
-    const params: ScanCommandInput = {
-      TableName: this.tableName,
-      Limit: 100,
-    };
-
-    const data = await this.dbClientsProvider.dbDocumentClient.send(
-      new ScanCommand(params),
-    );
-
-    return data.Items.map((item: any) => PagamentoMapper.mapToPagamento(item));
-  }
-
-  async criarPagamento(pagamento: Pagamento): Promise<Pagamento> {
-    const params: PutCommandInput = {
-      TableName: this.tableName,
-      Item: pagamento,
-    };
-
-    await this.dbClientsProvider.dbDocumentClient.send(new PutCommand(params));
-
-    return pagamento;
-  }
-
-  async atualizarStatusPagamento(pagamento: Pagamento): Promise<Pagamento> {
-    const params: UpdateCommandInput = {
-      TableName: this.tableName,
-      Key: {
-        pedidoId: pagamento.pedidoId,
-      },
-      UpdateExpression: 'SET #statusPagamento = :statusPagamento',
-      ExpressionAttributeNames: {
-        '#statusPagamento': 'statusPagamento',
-      },
-      ExpressionAttributeValues: {
-        ':statusPagamento': pagamento.statusPagamento,
-      },
-    };
-
-    await this.dbClientsProvider.dbDocumentClient.send(
-      new UpdateCommand(params),
-    );
-
-    return pagamento;
-  }
-
-  async atualizarStatusPagamentoEQRCode(
-    pagamento: Pagamento,
-  ): Promise<Pagamento> {
-    const params: UpdateCommandInput = {
-      TableName: this.tableName,
-      Key: {
-        pedidoId: pagamento.pedidoId,
-      },
-      UpdateExpression:
-        'SET #statusPagamento = :statusPagamento, #qrCode = :qrCode',
-      ExpressionAttributeNames: {
-        '#statusPagamento': 'statusPagamento',
-        '#qrCode': 'qrCode',
-      },
-      ExpressionAttributeValues: {
-        ':statusPagamento': pagamento.statusPagamento,
-        ':qrCode': { S: pagamento.qrCode },
-      },
-    };
-
-    await this.dbClientsProvider.dbDocumentClient.send(
-      new UpdateCommand(params),
-    );
-
-    return pagamento;
-  }
-
-  async atualizarQRCode(pagamento: Pagamento): Promise<Pagamento> {
-    const params: UpdateCommandInput = {
-      TableName: this.tableName,
-      Key: {
-        id: pagamento.id,
-        pedidoId: pagamento.pedidoId,
-      },
-      UpdateExpression: 'SET #statusPagamento = :statusPagamento',
-      ExpressionAttributeNames: {
-        '#statusPagamento': 'statusPagamento',
-      },
-      ExpressionAttributeValues: {
-        ':statusPagamento': pagamento.statusPagamento,
-      },
-    };
-
-    await this.dbClientsProvider.dbDocumentClient.send(
-      new UpdateCommand(params),
-    );
-
-    return pagamento;
+  async criarPagamento(pagamento: PagamentoEntity): Promise<PagamentoEntity> {
+    return await this.pagamento.create<PagamentoEntity>(pagamento);
   }
 
   async obterPagamentoPorIdDoPedido(
     pedidoId: string,
-  ): Promise<Pagamento | null> {
-    const params: GetCommandInput = {
-      TableName: this.tableName,
-      Key: {
-        pedidoId: pedidoId,
-      },
-    };
+  ): Promise<PagamentoEntity | null> {
+    return await this.pagamento.findOne<PagamentoEntity>({ pedidoId });
+  }
 
-    const data = await this.dbClientsProvider.dbDocumentClient.send(
-      new GetCommand(params),
+  async atualizarPagamento(
+    pagamento: PagamentoEntity,
+  ): Promise<PagamentoEntity> {
+    return await this.pagamento.findByIdAndUpdate<PagamentoEntity>(
+      pagamento._id,
+      pagamento,
     );
+  }
 
-    return data?.Item ? PagamentoMapper.mapToPagamento(data.Item) : null;
+  obterPagamentos(): Promise<PagamentoEntity[]> {
+    throw new Error('Method not implemented.');
   }
 }

@@ -15,7 +15,6 @@ export class MercadoPagoService implements MercadoPagoPort {
 
   async gerarQrcode(body: PedidoMP): Promise<string> {
     try {
-      console.log(JSON.stringify(body));
       const { data } = await this.axiosInstance.post<QRCodeResponse>(
         this.uri,
         body,

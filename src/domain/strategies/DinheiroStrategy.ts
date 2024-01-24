@@ -20,7 +20,7 @@ export class DinheiroStrategy implements MetodoDePagamentoStrategyPort {
   ): Promise<Pagamento> {
     pagamento.atualizarStatusPagamento(StatusPagamento.PAGO);
 
-    await this.pagamentoGatewayPort.atualizarStatusPagamento(pagamento);
+    await this.pagamentoGatewayPort.atualizarPagamento(pagamento);
 
     return pagamento;
   }

@@ -5,6 +5,7 @@ import {
   PagamentoRepositoryPort,
   PagamentoRepositoryPortKey,
 } from 'src/infrastructure/db/repositories/PagamentoRepositoryPort';
+import { PagamentoMapper } from './mappers/PagamentoMapper';
 
 @Injectable()
 export class PagamentoGateway implements PagamentoGatewayPort {
@@ -14,26 +15,40 @@ export class PagamentoGateway implements PagamentoGatewayPort {
   ) {}
 
   async obterPagamentos(): Promise<Pagamento[]> {
-    return await this.pagamentoRepository.obterPagamentos();
+    throw new Error('Method not implemented.');
   }
 
   async criarPagamento(pagamento: Pagamento): Promise<Pagamento> {
-    return await this.pagamentoRepository.criarPagamento(pagamento);
+    const pagamentoEntity = PagamentoMapper.toEntity(pagamento);
+    const result = await this.pagamentoRepository.criarPagamento(
+      pagamentoEntity,
+    );
+
+    return PagamentoMapper.toDomin(result);
   }
 
-  async atualizarStatusPagamento(pagamento: Pagamento): Promise<Pagamento> {
-    return await this.pagamentoRepository.atualizarStatusPagamento(pagamento);
+  async atualizarPagamento(pagamento: Pagamento): Promise<Pagamento> {
+    const pagamentoEntity = PagamentoMapper.toEntity(pagamento);
+    const result = await this.pagamentoRepository.atualizarPagamento(
+      pagamentoEntity,
+    );
+
+    return PagamentoMapper.toDomin(result);
   }
 
   async atualizarStatusPagamentoEQRCode(
     pagamento: Pagamento,
   ): Promise<Pagamento> {
-    return await this.pagamentoRepository.atualizarStatusPagamentoEQRCode(
-      pagamento,
-    );
+    throw new Error('Method not implemented.');
   }
 
-  async obterPagamentoPorIdDoPedido(pedidoId: string): Promise<Pagamento> {
-    return await this.pagamentoRepository.obterPagamentoPorIdDoPedido(pedidoId);
+  async obterPagamentoPorIdDoPedido(
+    pedidoId: string,
+  ): Promise<Pagamento | null> {
+    const result = await this.pagamentoRepository.obterPagamentoPorIdDoPedido(
+      pedidoId,
+    );
+
+    return result ? PagamentoMapper.toDomin(result) : null;
   }
 }

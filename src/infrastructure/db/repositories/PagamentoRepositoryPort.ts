@@ -1,11 +1,12 @@
-import { Pagamento } from 'src/domain/entities/Pagamento';
+import { PagamentoEntity } from '../entities/PagamentoEntity';
 
 export const PagamentoRepositoryPortKey = 'IPagamentoRepositoryPort';
 
 export interface PagamentoRepositoryPort {
-  criarPagamento(pagamento: Pagamento): Promise<Pagamento>;
-  atualizarStatusPagamento(pagamento: Pagamento): Promise<Pagamento>;
-  atualizarStatusPagamentoEQRCode(pagamento: Pagamento): Promise<Pagamento>;
-  obterPagamentoPorIdDoPedido(pedidoId: string): Promise<Pagamento | null>;
-  obterPagamentos(): Promise<Pagamento[]>;
+  criarPagamento(pagamento: PagamentoEntity): Promise<PagamentoEntity>;
+  atualizarPagamento(pagamento: PagamentoEntity): Promise<PagamentoEntity>;
+  obterPagamentoPorIdDoPedido(
+    pedidoId: string,
+  ): Promise<PagamentoEntity | null>;
+  obterPagamentos(): Promise<PagamentoEntity[]>;
 }
