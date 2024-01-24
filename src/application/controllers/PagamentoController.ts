@@ -3,6 +3,7 @@ import { Pagamento } from 'src/domain/entities/Pagamento';
 import { Pedido } from 'src/domain/entities/Pedido';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
 import { ProcessarPagamentoUseCase } from 'src/domain/useCases/ProcessarPagamentoUseCase';
+import { PedidoDto } from '../presenters/requests/PedidoDto';
 
 @Controller('pagamentos')
 export class PagamentoController {
@@ -12,8 +13,8 @@ export class PagamentoController {
   ) {}
 
   @Post()
-  async processarPagamento(@Body() pedido: Pedido): Promise<Pagamento> {
-    return await this.processarPagamentoUseCase.execute(pedido);
+  async processarPagamento(@Body() pedidoDto: PedidoDto): Promise<Pagamento> {
+    return await this.processarPagamentoUseCase.execute(pedidoDto);
   }
 
   @Get()
