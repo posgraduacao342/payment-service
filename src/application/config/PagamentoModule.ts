@@ -12,10 +12,13 @@ import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCa
 import { MercadoPagoModule } from 'src/infrastructure/mercadoPago/MercadoPagoModule';
 import { PagamentoRepository } from 'src/infrastructure/db/repositories/PagamentoRepository';
 import { MongoModule } from 'src/infrastructure/db/MongoModule';
+import { TerminusModule } from '@nestjs/terminus';
+import { HealthController } from '../controllers/HealthController';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [MercadoPagoModule, MongoModule],
-  controllers: [PagamentoController],
+  imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
+  controllers: [PagamentoController, HealthController],
   providers: [
     ProcessarPagamentoUseCase,
     MetodoPagamentoFactory,
