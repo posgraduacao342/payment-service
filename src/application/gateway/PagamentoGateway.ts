@@ -25,6 +25,14 @@ export class PagamentoGateway implements PagamentoGatewayPort {
     return await this.pagamentoRepository.atualizarStatusPagamento(pagamento);
   }
 
+  async atualizarStatusPagamentoEQRCode(
+    pagamento: Pagamento,
+  ): Promise<Pagamento> {
+    return await this.pagamentoRepository.atualizarStatusPagamentoEQRCode(
+      pagamento,
+    );
+  }
+
   async obterPagamentoPorIdDoPedido(pedidoId: string): Promise<Pagamento> {
     return await this.pagamentoRepository.obterPagamentoPorIdDoPedido(pedidoId);
   }

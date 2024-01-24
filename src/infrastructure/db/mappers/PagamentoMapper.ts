@@ -3,6 +3,7 @@ import { MetodoPagamento, StatusPagamento } from 'src/domain/enums';
 
 export class PagamentoMapper {
   static mapToPagamento(item: any): Pagamento {
+    console.log(item);
     return {
       id: item.id.S,
       pedidoId: item.pedidoId.S,
@@ -12,7 +13,7 @@ export class PagamentoMapper {
       dataCriacao: new Date(),
       dataAtualizacao: new Date(),
       dataDelecao: null,
-      qrCode: item.qrCode?.M ?? null,
+      qrCode: item.qrCode?.S ?? null,
     } as any;
   }
 }

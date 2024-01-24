@@ -6,7 +6,8 @@ export class Item {
   observacoes: string;
   quantidade: number;
 
-  public calcularTotal(): number {
+  calcularTotal(): number {
+    console.log('aiuqiauiu');
     const quantidade = this.quantidade;
     const valorUnitario = this.produto.preco;
 

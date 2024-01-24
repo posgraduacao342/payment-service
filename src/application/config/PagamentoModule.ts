@@ -12,9 +12,10 @@ import { MercadoPagoGatewayPortKey } from 'src/domain/ports/out/MercadoPagoGatew
 import { MercadoPagoGateway } from '../gateway/MercadoPagoGateway';
 import { DbClientsProvider } from 'src/infrastructure/db/config/DbClientProvider';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
+import { MercadoPagoModule } from 'src/infrastructure/mercadoPago/MercadoPagoModule';
 
 @Module({
-  imports: [],
+  imports: [MercadoPagoModule],
   controllers: [PagamentoController],
   providers: [
     ProcessarPagamentoUseCase,

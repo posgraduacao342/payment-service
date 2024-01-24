@@ -25,7 +25,7 @@ export class PagamentoRepository implements PagamentoRepositoryPort {
   async obterPagamentos(): Promise<Pagamento[]> {
     const params: ScanCommandInput = {
       TableName: this.tableName,
-      Limit: 10,
+      Limit: 100,
     };
 
     const data = await this.dbClientsProvider.dbDocumentClient.send(
@@ -58,6 +58,33 @@ export class PagamentoRepository implements PagamentoRepositoryPort {
       },
       ExpressionAttributeValues: {
         ':statusPagamento': pagamento.statusPagamento,
+      },
+    };
+
+    await this.dbClientsProvider.dbDocumentClient.send(
+      new UpdateCommand(params),
+    );
+
+    return pagamento;
+  }
+
+  async atualizarStatusPagamentoEQRCode(
+    pagamento: Pagamento,
+  ): Promise<Pagamento> {
+    const params: UpdateCommandInput = {
+      TableName: this.tableName,
+      Key: {
+        pedidoId: pagamento.pedidoId,
+      },
+      UpdateExpression:
+        'SET #statusPagamento = :statusPagamento, #qrCode = :qrCode',
+      ExpressionAttributeNames: {
+        '#statusPagamento': 'statusPagamento',
+        '#qrCode': 'qrCode',
+      },
+      ExpressionAttributeValues: {
+        ':statusPagamento': pagamento.statusPagamento,
+        ':qrCode': { S: pagamento.qrCode },
       },
     };
 

@@ -31,7 +31,8 @@ export class MercadoPagoQRCodeStrategy
     const qrCode = await this.mercadoPagoGateway.gerarQrcode(pedido);
     pagamento.qrCode = qrCode;
 
-    this.pagamentoGateway.atualizarStatusPagamento(pagamento);
+    await this.pagamentoGateway.atualizarStatusPagamento(pagamento);
+
     return pagamento;
   }
 }
