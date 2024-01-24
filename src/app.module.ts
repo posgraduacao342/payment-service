@@ -8,10 +8,10 @@ import { MongoModule } from './infrastructure/db/MongoModule';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     MongoModule,
     PagamentoModule,
-    MongooseModule.forRoot('mongodb://admin:password@mongodb:27017'),
-    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.DATA_BASE_URL),
   ],
   controllers: [AppController],
   providers: [AppService],

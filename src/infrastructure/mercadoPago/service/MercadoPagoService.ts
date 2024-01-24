@@ -20,8 +20,7 @@ export class MercadoPagoService implements MercadoPagoPort {
         body,
         {
           headers: {
-            Authorization:
-              'Bearer APP_USR-1205513195900433-090211-9f4253ec298e832217a72d272f830d97-1467136605',
+            Authorization: `Bearer ${process.env.MERCADO_PAGO_TOKEN}`,
           },
         },
       );

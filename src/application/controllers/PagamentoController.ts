@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Pagamento } from 'src/domain/entities/Pagamento';
-import { Pedido } from 'src/domain/entities/Pedido';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
 import { ProcessarPagamentoUseCase } from 'src/domain/useCases/ProcessarPagamentoUseCase';
 import { PedidoDto } from '../presenters/requests/PedidoDto';

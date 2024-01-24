@@ -8,7 +8,7 @@ import { MercadoPagoService } from './service/MercadoPagoService';
     {
       provide: 'AxiosIntance',
       useFactory: () => {
-        return axios.create({ baseURL: 'https://api.mercadopago.com' });
+        return axios.create({ baseURL: process.env.MERCADO_PAGO_URL });
       },
     },
     {
