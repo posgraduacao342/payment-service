@@ -14,6 +14,10 @@ export class PagamentoRepository implements PagamentoRepositoryPort {
     private readonly pagamento: Model<PagamentoEntityDocument>,
   ) {}
 
+  async deletarPagamentoPorId(id: string): Promise<void> {
+    await this.pagamento.deleteOne({ _id: id });
+  }
+
   async criarPagamento(pagamento: PagamentoEntity): Promise<PagamentoEntity> {
     return await this.pagamento.create<PagamentoEntity>(pagamento);
   }
@@ -33,7 +37,7 @@ export class PagamentoRepository implements PagamentoRepositoryPort {
     );
   }
 
-  obterPagamentos(): Promise<PagamentoEntity[]> {
-    throw new Error('Method not implemented.');
+  async obterPagamentos(): Promise<PagamentoEntity[]> {
+    return await this.pagamento.find<PagamentoEntity>();
   }
 }

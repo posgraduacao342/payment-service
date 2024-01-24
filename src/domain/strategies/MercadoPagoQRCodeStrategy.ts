@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Pagamento } from '../entities/Pagamento';
 import { Pedido } from '../entities/Pedido';
 import { StatusPagamento } from '../enums';
@@ -26,13 +26,19 @@ export class MercadoPagoQRCodeStrategy
     pedido: Pedido,
     pagamento: Pagamento,
   ): Promise<Pagamento> {
-    pagamento.atualizarStatusPagamento(StatusPagamento.EM_PROGRESSO);
+    try {
+      pagamento.atualizarStatusPagamento(StatusPagamento.EM_PROGRESSO);
+      pagamento.qrCode = await this.mercadoPagoGateway.gerarQrcode(pedido);
 
-    const qrCode = await this.mercadoPagoGateway.gerarQrcode(pedido);
-    pagamento.qrCode = qrCode;
+      await this.pagamentoGateway.atualizarPagamento(pagamento);
+      return pagamento;
+    } catch (error) {
+      await this.pagamentoGateway.deletarPagamentoPorId(pagamento.id);
+      Logger.error(error);
 
-    await this.pagamentoGateway.atualizarPagamento(pagamento);
-
-    return pagamento;
+      throw new InternalServerErrorException(
+        'Erro ao gerar o QRCode do Mercado Pago',
+      );
+    }
   }
 }

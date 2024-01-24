@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { Pagamento } from '../entities/Pagamento';
 import { MetodoPagamentoFactory } from '../factories/MetodoPagamentoFactory';
 import {
@@ -21,7 +21,7 @@ export class ProcessarPagamentoUseCase {
       pedido.id,
     );
     if (pagamento) {
-      throw new Error('Pagamento já foi efetuado');
+      throw new ConflictException('Pagamento já foi efetuado');
     }
 
     const novoPagamento = Pagamento.criarNovoPagamento(

@@ -14,8 +14,15 @@ export class PagamentoGateway implements PagamentoGatewayPort {
     private readonly pagamentoRepository: PagamentoRepositoryPort,
   ) {}
 
+  async deletarPagamentoPorId(id: string): Promise<void> {
+    await this.pagamentoRepository.deletarPagamentoPorId(id);
+  }
+
   async obterPagamentos(): Promise<Pagamento[]> {
-    throw new Error('Method not implemented.');
+    const pagamentoEntities = await this.pagamentoRepository.obterPagamentos();
+    return pagamentoEntities.map((pagamentoEntity) =>
+      PagamentoMapper.toDomin(pagamentoEntity),
+    );
   }
 
   async criarPagamento(pagamento: Pagamento): Promise<Pagamento> {
@@ -34,12 +41,6 @@ export class PagamentoGateway implements PagamentoGatewayPort {
     );
 
     return PagamentoMapper.toDomin(result);
-  }
-
-  async atualizarStatusPagamentoEQRCode(
-    pagamento: Pagamento,
-  ): Promise<Pagamento> {
-    throw new Error('Method not implemented.');
   }
 
   async obterPagamentoPorIdDoPedido(

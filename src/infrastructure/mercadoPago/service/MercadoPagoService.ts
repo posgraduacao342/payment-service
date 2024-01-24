@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
+import { AxiosInstance } from 'axios';
 import { PedidoMP } from '../entities/PedidoMp';
 import { MercadoPagoPort } from '../port/MercadoPagoPort';
-import { AxiosInstance } from 'axios';
 import { QRCodeResponse } from '../entities/QRCodeResponse';
 
 export class MercadoPagoService implements MercadoPagoPort {
@@ -14,21 +14,16 @@ export class MercadoPagoService implements MercadoPagoPort {
   }
 
   async gerarQrcode(body: PedidoMP): Promise<string> {
-    try {
-      const { data } = await this.axiosInstance.post<QRCodeResponse>(
-        this.uri,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.MERCADO_PAGO_TOKEN}`,
-          },
+    const { data } = await this.axiosInstance.post<QRCodeResponse>(
+      this.uri,
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.MERCADO_PAGO_TOKEN}`,
         },
-      );
+      },
+    );
 
-      return data.qr_data;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    return data.qr_data;
   }
 }
