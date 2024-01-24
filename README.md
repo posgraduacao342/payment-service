@@ -22,17 +22,14 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## Gerar o build
 
 ```bash
 $ docker-compose build
 ```
 
-## Running the app
+## Iniciar a aplicação
 
 ```bash
 # development
@@ -52,10 +49,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Suporte
 - Author - [Matheus Golmini](https://github.com/matheusGolmini)
 - Website - [https://nestjs.com](https://nestjs.com/)
 
-## License
+## Licença
 
 Nest is [MIT licensed](LICENSE).
