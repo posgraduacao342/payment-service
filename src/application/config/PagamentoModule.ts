@@ -16,6 +16,7 @@ import { HealthController } from '../controllers/HealthController';
 import { HttpModule } from '@nestjs/axios';
 import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
 import { PagamentoRepository } from 'src/infrastructure/db/repositories/PagamentoRepository';
+import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagamentoPorPedidoIdUseCase';
 
 @Module({
   imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
@@ -28,6 +29,7 @@ import { PagamentoRepository } from 'src/infrastructure/db/repositories/Pagament
     ObterPagamentosUseCase,
     PagamentoRepository,
     ValidarPagamentoMPUseCase,
+    ObterPagamentoPorPedidoIdUseCase,
     {
       provide: PagamentoGatewayPortKey,
       useClass: PagamentoGateway,

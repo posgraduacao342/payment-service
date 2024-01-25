@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { Pagamento } from 'src/domain/entities/Pagamento';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
 import { ProcessarPagamentoUseCase } from 'src/domain/useCases/ProcessarPagamentoUseCase';
@@ -6,6 +13,7 @@ import { PedidoDto } from '../presenters/requests/PedidoDto';
 import { ApiTags } from '@nestjs/swagger';
 import { ProcessarPagamentoMPDto } from '../presenters/requests/ProcessarPagamentoMPDto';
 import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
+import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagamentoPorPedidoIdUseCase';
 
 @ApiTags('Pagamentos')
 @Controller('pagamentos')
@@ -14,6 +22,7 @@ export class PagamentoController {
     private readonly processarPagamentoUseCase: ProcessarPagamentoUseCase,
     private readonly obterPagamentosUseCase: ObterPagamentosUseCase,
     private readonly validarPagamentoMPUseCase: ValidarPagamentoMPUseCase,
+    private readonly obterPagamentoPorPedidoIdUseCase: ObterPagamentoPorPedidoIdUseCase,
   ) {}
 
   @Post()
@@ -33,5 +42,12 @@ export class PagamentoController {
   @Get()
   async buscarPagamentos(): Promise<Pagamento[]> {
     return await this.obterPagamentosUseCase.execute();
+  }
+
+  @Get('/:pedidoId')
+  async buscarPagamentoPorId(
+    @Param('pedidoId', ParseUUIDPipe) pedidoId: string,
+  ): Promise<Pagamento> {
+    return await this.obterPagamentoPorPedidoIdUseCase.execute(pedidoId);
   }
 }
