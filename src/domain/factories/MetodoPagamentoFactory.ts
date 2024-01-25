@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { MetodoPagamento } from '../enums';
 import { MetodoDePagamentoStrategyPort } from '../ports/out/MetodoDePagamentoStrategyPort';
 import { DinheiroStrategy } from '../strategies/DinheiroStrategy';
@@ -26,7 +26,7 @@ export class MetodoPagamentoFactory {
     if (this.estrategias[metodoPagamento] !== undefined) {
       return this.estrategias[metodoPagamento];
     } else {
-      throw new Error('Método de pagamento não suportado');
+      throw new BadRequestException('Método de pagamento não suportado');
     }
   }
 }
