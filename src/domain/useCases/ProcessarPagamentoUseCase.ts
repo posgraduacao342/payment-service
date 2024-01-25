@@ -20,6 +20,7 @@ export class ProcessarPagamentoUseCase {
     const pagamento = await this.pagamentoGateway.obterPagamentoPorIdDoPedido(
       pedido.id,
     );
+
     if (pagamento) {
       throw new ConflictException('Pagamento já foi efetuado');
     }
