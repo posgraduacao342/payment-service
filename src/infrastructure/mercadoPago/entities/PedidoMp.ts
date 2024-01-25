@@ -33,16 +33,6 @@ export class PedidoMP {
     const expirationDateTime = new Date(currentDateTime);
     expirationDateTime.setDate(currentDateTime.getDate() + diasDeExpiracao);
 
-    // const formatter = new Intl.DateTimeFormat('en', {
-    //   year: 'numeric',
-    //   month: '2-digit',
-    //   day: '2-digit',
-    //   hour: '2-digit',
-    //   minute: '2-digit',
-    //   second: '2-digit',
-    //   timeZoneName: 'short',
-    // });
-
     return expirationDateTime;
   }
 }

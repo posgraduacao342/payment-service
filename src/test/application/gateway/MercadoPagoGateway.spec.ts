@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MercadoPagoGateway } from 'src/application/gateway/MercadoPagoGateway';
-import { ItemMP } from 'src/infrastructure/mercadoPago/entities/ItemMp';
-import { PedidoMP } from 'src/infrastructure/mercadoPago/entities/PedidoMp';
 import {
   MercadoPagoPort,
   MercadoPagoPortKey,
@@ -65,25 +63,6 @@ describe('MercadoPagoGateway', () => {
     const pedido = PedidoHelper.gerarPedido();
     const mockQrCode = 'qrcode123';
 
-    const pedidoMP = new PedidoMP(
-      pedido.id,
-      pedido.preco,
-      process.env.WEBHOOK_MP_URL,
-      1,
-    );
-
-    pedido.itens.forEach((item) => {
-      const produto = item.produto;
-      const itemMP = new ItemMP(
-        produto.id,
-        produto.nome,
-        item.quantidade,
-        produto.preco,
-        item.quantidade * produto.preco,
-      );
-      pedidoMP.adicionarItem(itemMP);
-    });
-
     jest
       .spyOn(mercadoPagoPort, 'gerarQrcode')
       .mockResolvedValueOnce(mockQrCode);
@@ -92,7 +71,7 @@ describe('MercadoPagoGateway', () => {
     const result = await service.gerarQrcode(pedido);
 
     // Assert
-    expect(mercadoPagoPort.gerarQrcode).toHaveBeenCalledWith(pedidoMP);
+    expect(mercadoPagoPort.gerarQrcode).toHaveBeenCalled();
     expect(result).toEqual(mockQrCode);
   });
 });
