@@ -30,6 +30,11 @@ describe('MetodoPagamentoFactory', () => {
     factory = module.get<MetodoPagamentoFactory>(MetodoPagamentoFactory);
   });
 
+  it('deve ser criado corretamente', () => {
+    //Assert
+    expect(factory).toBeDefined();
+  });
+
   it('deve retornar o metodo de pagamento por dinheiro', () => {
     //Arange and Act
     const startegy = factory.obterEstrategia(MetodoPagamento.DINHEIRO);
