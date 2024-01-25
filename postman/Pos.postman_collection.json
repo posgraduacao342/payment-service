@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "1dc3a459-12c3-4213-85d6-ef2655dc9f8e",
+		"name": "Pos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7958474"
+	},
+	"item": [
+		{
+			"name": "Payment-Service",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObterPagamentos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"test\",\n    \"preco\": 10,\n    \"itens\": [\n        {\n            \"id\": \"id\",\n            \"quantidade\": 1,\n            \"observacoes\": \"\",\n            \"produto\": {\n                \"nome\": \"bolo\",\n                \"preco\": 10,\n                \"id\": \"id\"\n            }\n        }\n    ],\n    \"metodoPagamento\": \"DINHEIRO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/pagamentos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"pagamentos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObterPagamentoPorPedidoId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/pagamentos/c1bb35d2-2132-452e-9cc2-14511192bec5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"pagamentos",
+								"c1bb35d2-2132-452e-9cc2-14511192bec5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ProcessarPagamento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"data\": {\n    \"id\": \"\"\n   }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/pagamentos/mercado-pago/webhooks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"pagamentos",
+								"mercado-pago",
+								"webhooks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ProcessarPagamentoWebhookMP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"data\": {\n    \"id\": \"4334324\"\n   }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/pagamentos/mercado-pago/webhooks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"pagamentos",
+								"mercado-pago",
+								"webhooks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MercadoPago",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "APP_USR-1205513195900433-090211-9f4253ec298e832217a72d272f830d97-1467136605",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Pedido da lanchonete\",\n    \"external_reference\": \"test997\",\n    \"total_amount\": 10,\n    \"expiration_date\": \"2024-01-25T00:53:03.224Z\",\n    \"notification_url\": \"https://www.google.com.br\",\n    \"items\": [\n        {\n            \"sku_number\": \"id\",\n            \"title\": \"bolo\",\n            \"quantity\": 1,\n            \"unit_price\": 10,\n            \"total_amount\": 10,\n            \"unit_measure\": \"unit\"\n        }\n    ],\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com//instore/orders/qr/seller/collectors/1467136605/pos/test123456/qrs",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"",
+								"instore",
+								"orders",
+								"qr",
+								"seller",
+								"collectors",
+								"1467136605",
+								"pos",
+								"test123456",
+								"qrs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
