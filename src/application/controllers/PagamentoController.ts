@@ -4,6 +4,8 @@ import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCa
 import { ProcessarPagamentoUseCase } from 'src/domain/useCases/ProcessarPagamentoUseCase';
 import { PedidoDto } from '../presenters/requests/PedidoDto';
 import { ApiTags } from '@nestjs/swagger';
+import { ProcessarPagamentoMPDto } from '../presenters/requests/ProcessarPagamentoMPDto';
+import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
 
 @ApiTags('Pagamentos')
 @Controller('pagamentos')
@@ -11,11 +13,21 @@ export class PagamentoController {
   constructor(
     private readonly processarPagamentoUseCase: ProcessarPagamentoUseCase,
     private readonly obterPagamentosUseCase: ObterPagamentosUseCase,
+    private readonly validarPagamentoMPUseCase: ValidarPagamentoMPUseCase,
   ) {}
 
   @Post()
   async processarPagamento(@Body() pedidoDto: PedidoDto): Promise<Pagamento> {
     return await this.processarPagamentoUseCase.execute(pedidoDto);
+  }
+
+  @Post('/mercado-pago/webhooks')
+  public async mercadoPagoWe(
+    @Body() pedidoDto: ProcessarPagamentoMPDto,
+  ): Promise<string> {
+    await this.validarPagamentoMPUseCase.execute(pedidoDto.data.id);
+
+    return 'ok';
   }
 
   @Get()

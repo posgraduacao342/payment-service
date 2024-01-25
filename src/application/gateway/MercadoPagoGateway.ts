@@ -14,12 +14,26 @@ export class MercadoPagoGateway implements MercadoPagoGatewayPort {
     private readonly mercadoPago: MercadoPagoPort,
   ) {}
 
+  async pagamentoFoiRealizadoComSucesso(
+    pagamentoId: string,
+  ): Promise<{ status: boolean; pedidoId: string }> {
+    const infoPagamento = await this.mercadoPago.buscarInfoPagamento(
+      pagamentoId,
+    );
+
+    return {
+      status: infoPagamento.status === 'approved',
+      pedidoId: infoPagamento.external_reference,
+    };
+  }
+
   async gerarQrcode(pedido: Pedido): Promise<string> {
     const diasDeExpiracao = 1;
+    const webHookUrl = process.env.WEBHOOK_MP_URL;
     const pedidoMP = new PedidoMP(
       pedido.id,
       pedido.preco,
-      'https://www.google.com.br',
+      webHookUrl,
       diasDeExpiracao,
     );
 
