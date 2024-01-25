@@ -36,7 +36,7 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-## Test
+## Teste
 
 ```bash
 # unit tests
@@ -48,6 +48,30 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+## Pagamento em Dinheiro
+- Acesse o enpoint de pagamento POST - /pagamentos (`http://localhost:3000/swagger`) e envia a request e na request envie o metodo de pagamento como `DINHEIRO`
+
+## Pagamento pelo Mercado Pago
+### Pré requisitos
+- Instalar o ngrok nesse [site](https://ngrok.com/download).
+- Executar o ngrok `./ngrok http 3000`
+- Pegar a url gerada(Ex: https://[urlNgrok]/pagamentos/mercado-pago/webhooks) e adicione no `.env` em `WEBHOOK_MP_URL`
+
+- Acesse o mercado pago com essa conta de teste:
+```
+usuario: TESTUSER2094400829
+senha: T5QXrnlKgJ
+```
+- Acesse o enpoint de pagamento POST - /pagamentos (`http://localhost:3000/swagger`) e envia a request e na request envie o metodo de pagamento como `MERCADO_PAGO`
+
+- Pegue o QR Code em formato de texto que será retornado e cole nesse site aperte o botão "Criar QR Code"
+
+### Fluxo de pagamento com sucesso
+- Escaneie o QR Code e efetue o pagamento saldo da conta.
+
+### Fluxo de pagamento com erro
+- Escaneie o QR Code e efetue o pagamento com o cartão de crédito cadastrado.
+- Código de segurança é 123.
 
 ## Suporte
 - Author - [Matheus Golmini](https://github.com/matheusGolmini)

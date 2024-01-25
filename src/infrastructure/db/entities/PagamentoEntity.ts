@@ -6,7 +6,7 @@ export type PagamentoEntityDocument = HydratedDocument<PagamentoEntity>;
 
 @Schema({ collection: 'pagamentos' })
 export class PagamentoEntity {
-  @Prop({ required: true, unique: true })
+  @Prop()
   _id: string;
 
   @Prop({ required: true, unique: true })

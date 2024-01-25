@@ -10,11 +10,12 @@ import { MercadoPagoGatewayPortKey } from 'src/domain/ports/out/MercadoPagoGatew
 import { MercadoPagoGateway } from '../gateway/MercadoPagoGateway';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
 import { MercadoPagoModule } from 'src/infrastructure/mercadoPago/MercadoPagoModule';
-import { PagamentoRepository } from 'src/infrastructure/db/repositories/PagamentoRepository';
 import { MongoModule } from 'src/infrastructure/db/MongoModule';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from '../controllers/HealthController';
 import { HttpModule } from '@nestjs/axios';
+import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
+import { PagamentoRepository } from 'src/infrastructure/db/repositories/PagamentoRepository';
 
 @Module({
   imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
@@ -26,6 +27,7 @@ import { HttpModule } from '@nestjs/axios';
     DinheiroStrategy,
     ObterPagamentosUseCase,
     PagamentoRepository,
+    ValidarPagamentoMPUseCase,
     {
       provide: PagamentoGatewayPortKey,
       useClass: PagamentoGateway,

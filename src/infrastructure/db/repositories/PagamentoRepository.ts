@@ -6,6 +6,7 @@ import {
 } from '../entities/PagamentoEntity';
 import { InjectModel } from '@nestjs/mongoose';
 import { PagamentoRepositoryPort } from './PagamentoRepositoryPort';
+import { StatusPagamento } from 'src/domain/enums';
 
 @Injectable()
 export class PagamentoRepository implements PagamentoRepositoryPort {
@@ -13,6 +14,16 @@ export class PagamentoRepository implements PagamentoRepositoryPort {
     @InjectModel(PagamentoEntity.name)
     private readonly pagamento: Model<PagamentoEntityDocument>,
   ) {}
+
+  async atualizarStatusPorPedidoId(
+    pedidoId: string,
+    statusPagamento: StatusPagamento,
+  ): Promise<void> {
+    await this.pagamento.updateOne<PagamentoEntity>(
+      { pedidoId },
+      { statusPagamento },
+    );
+  }
 
   async deletarPagamentoPorId(id: string): Promise<void> {
     await this.pagamento.deleteOne({ _id: id });

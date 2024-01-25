@@ -6,6 +6,7 @@ import {
   PagamentoRepositoryPortKey,
 } from 'src/infrastructure/db/repositories/PagamentoRepositoryPort';
 import { PagamentoMapper } from './mappers/PagamentoMapper';
+import { StatusPagamento } from 'src/domain/enums';
 
 @Injectable()
 export class PagamentoGateway implements PagamentoGatewayPort {
@@ -13,6 +14,16 @@ export class PagamentoGateway implements PagamentoGatewayPort {
     @Inject(PagamentoRepositoryPortKey)
     private readonly pagamentoRepository: PagamentoRepositoryPort,
   ) {}
+
+  async atualizarStatusPorPedidoId(
+    pedidoId: string,
+    statusPagamento: StatusPagamento,
+  ): Promise<void> {
+    await this.pagamentoRepository.atualizarStatusPorPedidoId(
+      pedidoId,
+      statusPagamento,
+    );
+  }
 
   async deletarPagamentoPorId(id: string): Promise<void> {
     await this.pagamentoRepository.deletarPagamentoPorId(id);

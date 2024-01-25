@@ -1,3 +1,4 @@
+import { StatusPagamento } from 'src/domain/enums';
 import { PagamentoEntity } from '../entities/PagamentoEntity';
 
 export const PagamentoRepositoryPortKey = 'IPagamentoRepositoryPort';
@@ -10,4 +11,8 @@ export interface PagamentoRepositoryPort {
   ): Promise<PagamentoEntity | null>;
   deletarPagamentoPorId(id: string): Promise<void>;
   obterPagamentos(): Promise<PagamentoEntity[]>;
+  atualizarStatusPorPedidoId(
+    pedidoId: string,
+    statusPagamento: StatusPagamento,
+  ): Promise<void>;
 }
