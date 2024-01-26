@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Pagamento } from 'src/domain/entities/Pagamento';
 import { StatusPagamento } from 'src/domain/enums';
 import {
   MercadoPagoGatewayPort,
@@ -19,10 +18,6 @@ describe('ValidarPagamentoMPUseCase', () => {
 
   const pagamentoId = 'pagamentoId';
   const pedido = PedidoHelper.gerarPedido();
-  const pagamento = Pagamento.criarNovoPagamento(
-    pedido,
-    StatusPagamento.EM_PROGRESSO,
-  );
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

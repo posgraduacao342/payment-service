@@ -77,7 +77,10 @@
       "**/*.(t|j)s",
       "!**/application/controllers/HealthController.ts",
       "!**/main.ts",
-      "!**/*.module.ts"
+      "!**/*.module.ts",
+      "!**/infrastructure/mercadoPago/entities/StatusPagamentoResponse.ts",
+      "!**/infrastructure/mercadoPago/entities/QRCodeResponse.ts",
+      "!**/domain/ports/out/MetodoDePagamentoStrategyPort.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
