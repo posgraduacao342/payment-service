@@ -12,34 +12,34 @@ on:
       - reopened
 
 jobs:
-  # sonar:
-  #   name: Build and analyze
-  #   runs-on: ubuntu-latest
+  sonar:
+    name: Build and analyze
+    runs-on: ubuntu-latest
     
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-  #     - name: Install Dependencies
-  #       run: yarn install --frozen-lockfile
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
 
-  #     - name: Test and coverage
-  #       run: yarn test:cov
+      - name: Test and coverage
+        run: yarn test:cov
 
-  #     - name: SonarCloud Scan
-  #       uses: SonarSource/sonarcloud-github-action@master
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
     name: Build and Publish Docker Image
     runs-on: ubuntu-latest
-    # needs: sonar
+    needs: sonar
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -91,8 +91,3 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f pipeline/application
-        # env:
-        #   DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        #   MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
-        #   MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
-        #   WEBHOOK_MP_URL: ${{ secrets.WEBHOOK_MP_URL }}
