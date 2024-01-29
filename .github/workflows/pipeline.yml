@@ -55,14 +55,14 @@ jobs:
           # Adicione esta parte para incluir a sessão
           echo ${{ secrets.AWS_SESSION_TOKEN }} | aws configure set aws_session_token --profile ecr-user
 
-          aws configure set region YOUR-AWS-REGION --profile ecr-user
-          aws ecr get-login-password --region YOUR-AWS-REGION --profile ecr-user | docker login --username AWS --password-stdin 637423603914.dkr.ecr.us-east-1.amazonaws.com
+          aws configure set region us-east-1 --profile ecr-user
+          aws ecr get-login-password --region us-east-1 --profile ecr-user | docker login --username AWS --password-stdin 637423603914.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build Docker Image
         id: build-image
         run: |
-          docker build -t your-image-name:latest .
-          docker tag your-image-name:latest 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
+          docker build -t 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest .
+          docker tag 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
 
       - name: Push Docker Image to ECR
         run: |
