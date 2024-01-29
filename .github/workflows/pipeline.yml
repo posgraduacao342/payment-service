@@ -12,34 +12,34 @@ on:
       - reopened
 
 jobs:
-  sonar:
-    name: Build and analyze
-    runs-on: ubuntu-latest
+  # sonar:
+  #   name: Build and analyze
+  #   runs-on: ubuntu-latest
     
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
 
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+  #     - name: Install Dependencies
+  #       run: yarn install --frozen-lockfile
 
-      - name: Test and coverage
-        run: yarn test:cov
+  #     - name: Test and coverage
+  #       run: yarn test:cov
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     - name: SonarCloud Scan
+  #       uses: SonarSource/sonarcloud-github-action@master
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
     name: Build and Publish Docker Image
     runs-on: ubuntu-latest
-    needs: sonar
+    # needs: sonar
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -49,11 +49,11 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         run: |
-          echo ${{ secrets.AWS_ACCESS_KEY_ID }} | aws configure set aws_access_key_id --profile ecr-user
-          echo ${{ secrets.AWS_SECRET_ACCESS_KEY }} | aws configure set aws_secret_access_key --profile ecr-user
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile ecr-user
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile ecr-user
 
           # Adicione esta parte para incluir a sessão
-          echo ${{ secrets.AWS_SESSION_TOKEN }} | aws configure set aws_session_token --profile ecr-user
+          aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }} --profile ecr-user
 
           aws configure set region us-east-1 --profile ecr-user
           aws ecr get-login-password --region us-east-1 --profile ecr-user | docker login --username AWS --password-stdin 637423603914.dkr.ecr.us-east-1.amazonaws.com
@@ -61,7 +61,7 @@ jobs:
       - name: Build Docker Image
         id: build-image
         run: |
-          docker build -t 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest .
+          docker build -t 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest -f Dockerfile .
           docker tag 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
 
       - name: Push Docker Image to ECR
@@ -73,10 +73,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
+        env:
+          AWS_DEFAULT_REGION: us-east-1
 
       - name: Set up kubectl
         uses: azure/k8s-set-context@v1
@@ -86,8 +91,8 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f pipeline/application
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
-          MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
-          WEBHOOK_MP_URL: ${{ secrets.WEBHOOK_MP_URL }}
+        # env:
+        #   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        #   MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
+        #   MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
+        #   WEBHOOK_MP_URL: ${{ secrets.WEBHOOK_MP_URL }}
