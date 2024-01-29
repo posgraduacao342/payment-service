@@ -2,12 +2,12 @@ version: '3'
 services:
   payment-service-nest:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: ./docker/Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ..:/app
     depends_on:
       - mongodb
     networks:

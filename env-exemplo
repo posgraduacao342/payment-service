@@ -1,5 +1,5 @@
 # Mongo
-DATA_BASE_URL=
+DATABASE_URL=
 
 # Mercado Pago
 MERCADO_PAGO_URL=
