@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge-payment
+  labels:
+    app: tech-challenge-payment
+spec:
+  template:
+    metadata:
+      name: tech-challenge-payment
+      labels:
+        app: tech-challenge-payment
+    spec:
+      containers:
+        - name: tech-challenge-payment-api
+          image: 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 40
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "256Mi"
+          env:
+            # - name: SPRING_DATASOURCE_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: tech-challenge-secret
+            #       key: spring.datasource.url
+            # - name: SPRING_DATASOURCE_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: tech-challenge-secret
+            #       key: spring.datasource.password
+            # - name: SPRING_DATASOURCE_USERNAME
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: tech-challenge-secret
+            #       key: spring.datasource.username
+            # - name: MP_TOKEN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: tech-challenge-secret
+            #       key: mp.token
+            - name: DATABASE_URL
+              value: "mongodb+srv://posgraduacao342:7QgYPntEZxPHVhZ9@tech-challenge-cluster.7a3bbgd.mongodb.net/tech-challenge?retryWrites=true&w=majority"
+            - name: MERCADO_PAGO_URL
+              value: "https://api.mercadopago.com"
+            - name: MERCADO_PAGO_TOKEN
+              value: "APP_USR-1205513195900433-090211-9f4253ec298e832217a72d272f830d97-1467136605"
+            - name: WEBHOOK_MP_URL
+              value: "https://ce88-45-230-103-240.ngrok-free.app/pagamentos/mercado-pago/webhooks"
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tech-challenge-payment
