@@ -30,35 +30,22 @@ spec:
               cpu: "0.2"
               memory: "256Mi"
           env:
-            # - name: SPRING_DATASOURCE_URL
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: tech-challenge-secret
-            #       key: spring.datasource.url
-            # - name: SPRING_DATASOURCE_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: tech-challenge-secret
-            #       key: spring.datasource.password
-            # - name: SPRING_DATASOURCE_USERNAME
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: tech-challenge-secret
-            #       key: spring.datasource.username
-            # - name: MP_TOKEN
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: tech-challenge-secret
-            #       key: mp.token
             - name: DATABASE_URL
-              value: "mongodb+srv://posgraduacao342:7QgYPntEZxPHVhZ9@tech-challenge-cluster.7a3bbgd.mongodb.net/tech-challenge?retryWrites=true&w=majority"
+              secretKeyRef:
+                name: tech-challenge-secret
+                key: DATABASE_URL
             - name: MERCADO_PAGO_URL
-              value: "https://api.mercadopago.com"
+              secretKeyRef:
+                name: tech-challenge-secret
+                key: MERCADO_PAGO_URL
             - name: MERCADO_PAGO_TOKEN
-              value: "APP_USR-1205513195900433-090211-9f4253ec298e832217a72d272f830d97-1467136605"
+              secretKeyRef:
+                name: tech-challenge-secret
+                key: MERCADO_PAGO_TOKEN
             - name: WEBHOOK_MP_URL
-              value: "https://ce88-45-230-103-240.ngrok-free.app/pagamentos/mercado-pago/webhooks"
-
+              secretKeyRef:
+                name: tech-challenge-secret
+                key: WEBHOOK_MP_URL
   replicas: 3
   selector:
     matchLabels:
