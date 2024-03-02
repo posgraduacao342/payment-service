@@ -56,17 +56,17 @@ jobs:
           aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }} --profile ecr-user
 
           aws configure set region us-east-1 --profile ecr-user
-          aws ecr get-login-password --region us-east-1 --profile ecr-user | docker login --username AWS --password-stdin 637423603914.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region us-east-1 --profile ecr-user | docker login --username AWS --password-stdin 851725563168.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build Docker Image
         id: build-image
         run: |
-          docker build -t 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest -f Dockerfile .
-          docker tag 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
+          docker build -t 851725563168.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest -f Dockerfile .
+          docker tag 851725563168.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest 851725563168.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
 
       - name: Push Docker Image to ECR
         run: |
-          docker push 637423603914.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
+          docker push 851725563168.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
         
   deploy:
     name: Deploy to Kubernetes
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
-        run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
+        run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
         env:
           AWS_DEFAULT_REGION: us-east-1
 
