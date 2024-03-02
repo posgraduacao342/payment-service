@@ -50,7 +50,7 @@ spec:
                 secretKeyRef:
                   name: tech-challenge-payment-secret
                   key: WEBHOOK_MP_URL
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: tech-challenge-payment

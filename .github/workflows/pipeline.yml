@@ -12,34 +12,34 @@ on:
       - reopened
 
 jobs:
-  # sonar:
-  #   name: Build and analyze
-  #   runs-on: ubuntu-latest
+  sonar:
+    name: Build and analyze
+    runs-on: ubuntu-latest
     
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-  #     - name: Install Dependencies
-  #       run: yarn install --frozen-lockfile
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
 
-  #     - name: Test and coverage
-  #       run: yarn test:cov
+      - name: Test and coverage
+        run: yarn test:cov
 
-  #     - name: SonarCloud Scan
-  #       uses: SonarSource/sonarcloud-github-action@master
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
     name: Build and Publish Docker Image
     runs-on: ubuntu-latest
-    # needs: sonar
+    needs: sonar
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -74,6 +74,25 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Set up environment variables
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV && echo "MERCADO_PAGO_URL=${{ secrets.MERCADO_PAGO_URL }}" >> $GITHUB_ENV && echo "MERCADO_PAGO_TOKEN=${{ secrets.MERCADO_PAGO_TOKEN }}" >> $GITHUB_ENV && echo "WEBHOOK_MP_URL=${{ secrets.WEBHOOK_MP_URL }}" >> $GITHUB_ENV
+
+      - name: Generate pipeline/application/secret.yaml
+        run: |
+          echo "apiVersion: v1" > pipeline/application/secret.yaml
+          echo "kind: Secret" >> pipeline/application/secret.yaml
+          echo "metadata:" >> pipeline/application/secret.yaml
+          echo "  name: tech-challenge-payment-secret" >> pipeline/application/secret.yaml
+          echo "type: Opaque" >> pipeline/application/secret.yaml
+          echo "data:" >> pipeline/application/secret.yaml
+          echo "  WEBHOOK_MP_URL: $WEBHOOK_MP_URL" >> pipeline/application/secret.yaml
+          echo "  MERCADO_PAGO_TOKEN: $MERCADO_PAGO_TOKEN" >> pipeline/application/secret.yaml
+          echo "  MERCADO_PAGO_URL: $MERCADO_PAGO_URL" >> pipeline/application/secret.yaml
+          echo "  DATABASE_URL: $DATABASE_URL" >> pipeline/application/secret.yaml
+      
+      - name: Verificar arquivo criado
+        run: cat pipeline/application/secret.yaml
 
       - name: Configure AWS Credentials
         run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
