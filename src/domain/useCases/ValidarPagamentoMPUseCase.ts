@@ -8,6 +8,10 @@ import {
   PagamentoGatewayPortKey,
 } from '../ports/out/PagamentoGatewayPort';
 import { StatusPagamento } from '../enums';
+import {
+  PagamentoProducerGatewayPort,
+  PagamentoProducerGatewayPortKey,
+} from '../ports/out/PagamentoProducerGatewayPort';
 
 @Injectable()
 export class ValidarPagamentoMPUseCase {
@@ -16,6 +20,8 @@ export class ValidarPagamentoMPUseCase {
     private readonly mercadoPagoGateway: MercadoPagoGatewayPort,
     @Inject(PagamentoGatewayPortKey)
     private readonly pagamentoGateway: PagamentoGatewayPort,
+    @Inject(PagamentoProducerGatewayPortKey)
+    private readonly pagamentoProducerGateway: PagamentoProducerGatewayPort,
   ) {}
 
   async execute(pagamentoId: string): Promise<void> {
@@ -29,6 +35,7 @@ export class ValidarPagamentoMPUseCase {
         pedidoId,
         StatusPagamento.PAGO,
       );
+      await this.pagamentoProducerGateway.publicarPagamentoAprovado(pedidoId);
       return;
     }
 
@@ -36,5 +43,6 @@ export class ValidarPagamentoMPUseCase {
       pedidoId,
       StatusPagamento.FRACASSADO,
     );
+    await this.pagamentoProducerGateway.publicarPagamentoRejeitado(pedidoId);
   }
 }

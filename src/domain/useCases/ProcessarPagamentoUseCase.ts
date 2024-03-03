@@ -17,10 +17,11 @@ export class ProcessarPagamentoUseCase {
   ) {}
 
   async execute(pedido: Pedido): Promise<Pagamento> {
-    const pagamento = await this.pagamentoGateway.obterPagamentoPorIdDoPedido(
-      pedido.id,
-    );
-
+    const pagamento =
+      await this.pagamentoGateway.obterPagamentoPorIdDoPedidoEStatus(
+        pedido.id,
+        [StatusPagamento.PAGO, StatusPagamento.EM_PROGRESSO],
+      );
     if (pagamento) {
       throw new ConflictException('Pagamento já foi efetuado');
     }

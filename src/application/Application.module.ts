@@ -16,6 +16,9 @@ import { HealthController } from './controllers/HealthController';
 import { HttpModule } from '@nestjs/axios';
 import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
 import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagamentoPorPedidoIdUseCase';
+import { PagamentoConsumer } from './consumers/PagamentoConsumer';
+import { PagamentoProducerGateway } from './gateway/PagamentoProducerGateway';
+import { PagamentoProducerGatewayPortKey } from 'src/domain/ports/out/PagamentoProducerGatewayPort';
 
 @Module({
   imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
@@ -28,6 +31,7 @@ import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagam
     ObterPagamentosUseCase,
     ValidarPagamentoMPUseCase,
     ObterPagamentoPorPedidoIdUseCase,
+    PagamentoConsumer,
     {
       provide: PagamentoGatewayPortKey,
       useClass: PagamentoGateway,
@@ -35,6 +39,10 @@ import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagam
     {
       provide: MercadoPagoGatewayPortKey,
       useClass: MercadoPagoGateway,
+    },
+    {
+      provide: PagamentoProducerGatewayPortKey,
+      useClass: PagamentoProducerGateway,
     },
   ],
 })
