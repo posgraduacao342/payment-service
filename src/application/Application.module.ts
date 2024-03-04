@@ -19,6 +19,8 @@ import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagam
 import { PagamentoConsumer } from './consumers/PagamentoConsumer';
 import { PagamentoProducerGateway } from './gateway/PagamentoProducerGateway';
 import { PagamentoProducerGatewayPortKey } from 'src/domain/ports/out/PagamentoProducerGatewayPort';
+import { EmailProducerGatewayPortKey } from 'src/domain/ports/out/EmailProducerGatewayPort';
+import { EmailProducerGateway } from './gateway/EmailProducerGateway';
 
 @Module({
   imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
@@ -43,6 +45,10 @@ import { PagamentoProducerGatewayPortKey } from 'src/domain/ports/out/PagamentoP
     {
       provide: PagamentoProducerGatewayPortKey,
       useClass: PagamentoProducerGateway,
+    },
+    {
+      provide: EmailProducerGatewayPortKey,
+      useClass: EmailProducerGateway,
     },
   ],
 })

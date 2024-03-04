@@ -11,6 +11,10 @@ import {
   PagamentoProducerGatewayPort,
   PagamentoProducerGatewayPortKey,
 } from '../ports/out/PagamentoProducerGatewayPort';
+import {
+  EmailProducerGatewayPort,
+  EmailProducerGatewayPortKey,
+} from '../ports/out/EmailProducerGatewayPort';
 
 export class DinheiroStrategy implements MetodoDePagamentoStrategyPort {
   constructor(
@@ -18,6 +22,8 @@ export class DinheiroStrategy implements MetodoDePagamentoStrategyPort {
     private readonly pagamentoGatewayPort: PagamentoGatewayPort,
     @Inject(PagamentoProducerGatewayPortKey)
     private readonly pagamentoProducerGateway: PagamentoProducerGatewayPort,
+    @Inject(EmailProducerGatewayPortKey)
+    private readonly emailProducerGatewayPort: EmailProducerGatewayPort,
   ) {}
 
   public async processarPagamento(
@@ -25,11 +31,14 @@ export class DinheiroStrategy implements MetodoDePagamentoStrategyPort {
     pagamento: Pagamento,
   ): Promise<Pagamento> {
     pagamento.atualizarStatusPagamento(StatusPagamento.PAGO);
-
-    const novoPagamento = await this.pagamentoGatewayPort.atualizarPagamento(
-      pagamento,
-    );
-    await this.pagamentoProducerGateway.publicarPagamentoAprovado(pedido.id);
-    return novoPagamento;
+    await this.pagamentoGatewayPort.atualizarPagamento(pagamento);
+    await Promise.all([
+      this.pagamentoProducerGateway.publicarPagamentoAprovado(pedido.id),
+      this.emailProducerGatewayPort.publicarEmailPagamentoComSucesso(
+        pedido.preco,
+        pedido.email,
+      ),
+    ]);
+    return pagamento;
   }
 }

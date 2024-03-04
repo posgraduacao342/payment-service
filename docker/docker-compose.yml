@@ -12,16 +12,30 @@ services:
       - mongodb
     networks:
       - mynetwork
+
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3-management
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - mynetwork
   
   mongodb:
     image: mongo:latest
     container_name: mongodb
-    restart: always
     ports:
       - '27017:27017'
     networks:
       - mynetwork
 
+volumes:
+  rabbit_data:
+    driver: local
+    
 networks:
   mynetwork:
     driver: bridge
