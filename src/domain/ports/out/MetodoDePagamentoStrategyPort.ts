@@ -5,5 +5,9 @@ export const MetodoDePagamentoStrategyPortKey =
   'IMetodoDePagamentoStrategyPort';
 
 export interface MetodoDePagamentoStrategyPort {
-  processarPagamento(pedido: Pedido, pagamento: Pagamento): Promise<Pagamento>;
+  processarPagamento(
+    pedido: Pedido,
+    pagamento: Pagamento,
+    email?: string,
+  ): Promise<Pagamento>;
 }

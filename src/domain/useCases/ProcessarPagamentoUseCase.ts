@@ -7,12 +7,18 @@ import {
 } from '../ports/out/PagamentoGatewayPort';
 import { Pedido } from '../entities/Pedido';
 import { StatusPagamento } from '../enums';
+import {
+  AccountApiGatewayPort,
+  AccountApiGatewayPorttKey,
+} from '../ports/out/AccountApiGatewayPort';
 
 @Injectable()
 export class ProcessarPagamentoUseCase {
   constructor(
     @Inject(PagamentoGatewayPortKey)
     private readonly pagamentoGateway: PagamentoGatewayPort,
+    @Inject(AccountApiGatewayPorttKey)
+    private readonly accountApiGateway: AccountApiGatewayPort,
     private readonly metodoPagamentoFactory: MetodoPagamentoFactory,
   ) {}
 
@@ -22,6 +28,7 @@ export class ProcessarPagamentoUseCase {
         pedido.id,
         [StatusPagamento.PAGO, StatusPagamento.EM_PROGRESSO],
       );
+
     if (pagamento) {
       throw new ConflictException('Pagamento já foi efetuado');
     }
@@ -39,6 +46,15 @@ export class ProcessarPagamentoUseCase {
       pedido.metodoPagamento,
     );
 
-    return await strategy.processarPagamento(pedido, novoPagamentoCriado);
+    let email = undefined;
+    if (pedido.clienteId) {
+      email = await this.accountApiGateway.buscarEmailUsuario(pedido.clienteId);
+    }
+
+    return await strategy.processarPagamento(
+      pedido,
+      novoPagamentoCriado,
+      email,
+    );
   }
 }

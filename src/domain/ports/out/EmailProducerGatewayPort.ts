@@ -1,9 +1,10 @@
 export const EmailProducerGatewayPortKey = 'IEmailProducerGatewayPort';
 
 export interface EmailProducerGatewayPort {
-  publicarEmailPagamentoComSucesso(
+  publicarEmailPagamentoComSucesso(email?: string): Promise<void>;
+  publicarEmailPagamentoRejeitado(email?: string): Promise<void>;
+  publicarEmailAguardandoPagamento(
     total: number,
     email?: string,
   ): Promise<void>;
-  publicarEmailPagamentoRejeitado(total: number, email?: string): Promise<void>;
 }

@@ -8,3 +8,6 @@ WEBHOOK_MP_URL=
 
 # Rabbit
 AMQP_URL=
+
+#API
+ACCOUNT_API_URL=

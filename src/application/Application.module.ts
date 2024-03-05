@@ -9,7 +9,6 @@ import { DinheiroStrategy } from 'src/domain/strategies/DinheiroStrategy';
 import { MercadoPagoGatewayPortKey } from 'src/domain/ports/out/MercadoPagoGatewayPort';
 import { MercadoPagoGateway } from './gateway/MercadoPagoGateway';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
-import { MercadoPagoModule } from 'src/infrastructure/mercadoPago/MercadoPago.module';
 import { MongoModule } from 'src/infrastructure/db/Mongo.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './controllers/HealthController';
@@ -21,9 +20,11 @@ import { PagamentoProducerGateway } from './gateway/PagamentoProducerGateway';
 import { PagamentoProducerGatewayPortKey } from 'src/domain/ports/out/PagamentoProducerGatewayPort';
 import { EmailProducerGatewayPortKey } from 'src/domain/ports/out/EmailProducerGatewayPort';
 import { EmailProducerGateway } from './gateway/EmailProducerGateway';
+import { AccountApiGateway } from './gateway/AccountApiGateway';
+import { AccountApiGatewayPorttKey } from 'src/domain/ports/out/AccountApiGatewayPort';
 
 @Module({
-  imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
+  imports: [MongoModule, TerminusModule, HttpModule],
   controllers: [PagamentoController, HealthController],
   providers: [
     ProcessarPagamentoUseCase,
@@ -49,6 +50,10 @@ import { EmailProducerGateway } from './gateway/EmailProducerGateway';
     {
       provide: EmailProducerGatewayPortKey,
       useClass: EmailProducerGateway,
+    },
+    {
+      provide: AccountApiGatewayPorttKey,
+      useClass: AccountApiGateway,
     },
   ],
 })

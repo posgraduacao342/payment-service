@@ -11,6 +11,7 @@ export class Pagamento {
   dataCriacao: Date;
   dataAtualizacao: Date;
   dataDelecao?: Date;
+  clienteId?: string;
   qrCode?: string;
 
   atualizarStatusPagamento(statusPagamento: StatusPagamento) {
@@ -29,6 +30,7 @@ export class Pagamento {
     novoPagamento.dataCriacao = new Date();
     novoPagamento.dataAtualizacao = new Date();
     novoPagamento.pedidoId = pedido.id;
+    novoPagamento.clienteId = pedido.clienteId;
 
     return novoPagamento;
   }

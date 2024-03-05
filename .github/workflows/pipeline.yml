@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up environment variables
-        run: echo "AMQP_URL=${{ secrets.AMQP_URL }}" >> $GITHUB_ENV echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV && echo "MERCADO_PAGO_URL=${{ secrets.MERCADO_PAGO_URL }}" >> $GITHUB_ENV && echo "MERCADO_PAGO_TOKEN=${{ secrets.MERCADO_PAGO_TOKEN }}" >> $GITHUB_ENV && echo "WEBHOOK_MP_URL=${{ secrets.WEBHOOK_MP_URL }}" >> $GITHUB_ENV
+        run: echo "ACCOUNT_API_URL=${{ secrets.ACCOUNT_API_URL }}" >> $GITHUB_ENV echo "AMQP_URL=${{ secrets.AMQP_URL }}" >> $GITHUB_ENV echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV && echo "MERCADO_PAGO_URL=${{ secrets.MERCADO_PAGO_URL }}" >> $GITHUB_ENV && echo "MERCADO_PAGO_TOKEN=${{ secrets.MERCADO_PAGO_TOKEN }}" >> $GITHUB_ENV && echo "WEBHOOK_MP_URL=${{ secrets.WEBHOOK_MP_URL }}" >> $GITHUB_ENV
 
       - name: Generate pipeline/application/secret.yaml
         run: |
@@ -91,6 +91,7 @@ jobs:
           echo "  MERCADO_PAGO_URL: $MERCADO_PAGO_URL" >> pipeline/application/secret.yaml
           echo "  DATABASE_URL: $DATABASE_URL" >> pipeline/application/secret.yaml
           echo "  AMQP_URL: $AMQP_URL" >> pipeline/application/secret.yaml
+          echo "  ACCOUNT_API_URL: $ACCOUNT_API_URL" >> pipeline/application/secret.yaml
       
       - name: Verificar arquivo criado
         run: cat pipeline/application/secret.yaml

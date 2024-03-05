@@ -10,13 +10,10 @@ export class EmailProducerGateway implements EmailProducerGatewayPort {
     this.exchange = 'amq.direct';
   }
 
-  async publicarEmailPagamentoComSucesso(
-    total: number,
-    email?: string,
-  ): Promise<void> {
+  async publicarEmailPagamentoComSucesso(email?: string): Promise<void> {
     if (!email) return;
 
-    const texto = `Seu pagamento no valor de ${total} foi pago com sucesso!`;
+    const texto = `Seu pagamento realizado com sucesso!`;
     await this.amqpConnetion.publish(this.exchange, 'enviar.email', {
       destinatario: email,
       texto,
@@ -24,13 +21,24 @@ export class EmailProducerGateway implements EmailProducerGatewayPort {
     });
   }
 
-  async publicarEmailPagamentoRejeitado(
+  async publicarEmailAguardandoPagamento(
     total: number,
-    email: string,
+    email?: string,
   ): Promise<void> {
     if (!email) return;
 
-    const texto = `Seu pagamento no valor de ${total} foi rejeitado!`;
+    const texto = `QR Code gerado no valor de ${total}. Estamso aguardando seu pagamento para dar andamento com o pedido.`;
+    await this.amqpConnetion.publish(this.exchange, 'enviar.email', {
+      destinatario: email,
+      texto,
+      assunto: 'Pagamento',
+    });
+  }
+
+  async publicarEmailPagamentoRejeitado(email: string): Promise<void> {
+    if (!email) return;
+
+    const texto = `Seu pagamento foi rejeitado!`;
     await this.amqpConnetion.publish(this.exchange, 'enviar.email', {
       destinatario: email,
       texto,

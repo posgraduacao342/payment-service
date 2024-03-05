@@ -12,6 +12,14 @@ import {
   PagamentoProducerGatewayPort,
   PagamentoProducerGatewayPortKey,
 } from '../ports/out/PagamentoProducerGatewayPort';
+import {
+  EmailProducerGatewayPort,
+  EmailProducerGatewayPortKey,
+} from '../ports/out/EmailProducerGatewayPort';
+import {
+  AccountApiGatewayPort,
+  AccountApiGatewayPorttKey,
+} from '../ports/out/AccountApiGatewayPort';
 
 @Injectable()
 export class ValidarPagamentoMPUseCase {
@@ -22,6 +30,10 @@ export class ValidarPagamentoMPUseCase {
     private readonly pagamentoGateway: PagamentoGatewayPort,
     @Inject(PagamentoProducerGatewayPortKey)
     private readonly pagamentoProducerGateway: PagamentoProducerGatewayPort,
+    @Inject(EmailProducerGatewayPortKey)
+    private readonly emailProducerGatewayPort: EmailProducerGatewayPort,
+    @Inject(AccountApiGatewayPorttKey)
+    private readonly accountApiGateway: AccountApiGatewayPort,
   ) {}
 
   async execute(pagamentoId: string): Promise<void> {
@@ -30,12 +42,33 @@ export class ValidarPagamentoMPUseCase {
         pagamentoId,
       );
 
-    if (status) {
-      await this.pagamentoGateway.atualizarStatusPorPedidoId(
-        pedidoId,
-        StatusPagamento.PAGO,
+    const pagamento = await this.pagamentoGateway.obterPagamentoPorIdDoPedido(
+      pedidoId,
+    );
+
+    if (!pagamento) {
+      console.log('Pagamento não foi encontrado');
+      return;
+    }
+
+    let email = undefined;
+    if (pagamento.clienteId) {
+      email = await this.accountApiGateway.buscarEmailUsuario(
+        pagamento.clienteId,
       );
-      await this.pagamentoProducerGateway.publicarPagamentoAprovado(pedidoId);
+    }
+
+    if (status) {
+      pagamento.atualizarStatusPagamento(StatusPagamento.PAGO);
+
+      await this.pagamentoGateway.atualizarPagamento(pagamento);
+      await Promise.all([
+        this.pagamentoProducerGateway.publicarPagamentoAprovado(
+          pedidoId,
+          pagamento.clienteId,
+        ),
+        this.emailProducerGatewayPort.publicarEmailPagamentoComSucesso(email),
+      ]);
       return;
     }
 
@@ -43,6 +76,12 @@ export class ValidarPagamentoMPUseCase {
       pedidoId,
       StatusPagamento.FRACASSADO,
     );
-    await this.pagamentoProducerGateway.publicarPagamentoRejeitado(pedidoId);
+    await Promise.all([
+      this.pagamentoProducerGateway.publicarPagamentoRejeitado(
+        pedidoId,
+        pagamento.clienteId,
+      ),
+      this.emailProducerGatewayPort.publicarEmailPagamentoRejeitado(email),
+    ]);
   }
 }

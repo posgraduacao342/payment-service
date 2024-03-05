@@ -29,15 +29,16 @@ export class DinheiroStrategy implements MetodoDePagamentoStrategyPort {
   public async processarPagamento(
     pedido: Pedido,
     pagamento: Pagamento,
+    email?: string,
   ): Promise<Pagamento> {
     pagamento.atualizarStatusPagamento(StatusPagamento.PAGO);
     await this.pagamentoGatewayPort.atualizarPagamento(pagamento);
     await Promise.all([
-      this.pagamentoProducerGateway.publicarPagamentoAprovado(pedido.id),
-      this.emailProducerGatewayPort.publicarEmailPagamentoComSucesso(
-        pedido.preco,
-        pedido.email,
+      this.pagamentoProducerGateway.publicarPagamentoAprovado(
+        pedido.id,
+        pagamento.clienteId,
       ),
+      this.emailProducerGatewayPort.publicarEmailPagamentoComSucesso(email),
     ]);
     return pagamento;
   }

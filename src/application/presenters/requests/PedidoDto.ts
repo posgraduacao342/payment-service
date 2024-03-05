@@ -63,7 +63,7 @@ export class PedidoDto extends Pedido {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  email?: string;
+  clienteId?: string;
 
   @ApiProperty()
   @IsNumber()
