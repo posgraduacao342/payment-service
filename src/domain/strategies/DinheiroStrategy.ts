@@ -7,19 +7,39 @@ import {
   PagamentoGatewayPortKey,
 } from '../ports/out/PagamentoGatewayPort';
 import { StatusPagamento } from '../enums';
+import {
+  PagamentoProducerGatewayPort,
+  PagamentoProducerGatewayPortKey,
+} from '../ports/out/PagamentoProducerGatewayPort';
+import {
+  EmailProducerGatewayPort,
+  EmailProducerGatewayPortKey,
+} from '../ports/out/EmailProducerGatewayPort';
 
 export class DinheiroStrategy implements MetodoDePagamentoStrategyPort {
   constructor(
     @Inject(PagamentoGatewayPortKey)
     private readonly pagamentoGatewayPort: PagamentoGatewayPort,
+    @Inject(PagamentoProducerGatewayPortKey)
+    private readonly pagamentoProducerGateway: PagamentoProducerGatewayPort,
+    @Inject(EmailProducerGatewayPortKey)
+    private readonly emailProducerGatewayPort: EmailProducerGatewayPort,
   ) {}
 
   public async processarPagamento(
-    _pedido: Pedido,
+    pedido: Pedido,
     pagamento: Pagamento,
+    email?: string,
   ): Promise<Pagamento> {
     pagamento.atualizarStatusPagamento(StatusPagamento.PAGO);
-
-    return await this.pagamentoGatewayPort.atualizarPagamento(pagamento);
+    await this.pagamentoGatewayPort.atualizarPagamento(pagamento);
+    await Promise.all([
+      this.pagamentoProducerGateway.publicarPagamentoAprovado(
+        pedido.id,
+        pagamento.clienteId,
+      ),
+      this.emailProducerGatewayPort.publicarEmailPagamentoComSucesso(email),
+    ]);
+    return pagamento;
   }
 }

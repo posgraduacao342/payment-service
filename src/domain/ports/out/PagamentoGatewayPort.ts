@@ -10,6 +10,10 @@ export interface PagamentoGatewayPort {
     pedidoId: string,
     statusPagamento: StatusPagamento,
   ): Promise<void>;
+  obterPagamentoPorIdDoPedidoEStatus(
+    pedidoId: string,
+    statusPagamentos: StatusPagamento[],
+  ): Promise<Pagamento | null>;
   obterPagamentoPorIdDoPedido(pedidoId: string): Promise<Pagamento | null>;
   obterPagamentos(): Promise<Pagamento[]>;
   deletarPagamentoPorId(id: string): Promise<void>;

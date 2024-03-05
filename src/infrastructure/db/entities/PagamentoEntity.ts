@@ -12,6 +12,9 @@ export class PagamentoEntity {
   @Prop({ required: true, unique: true })
   pedidoId: string;
 
+  @Prop({ required: false })
+  clienteId?: string;
+
   @Prop({ required: true, type: String, enum: StatusPagamento })
   statusPagamento: StatusPagamento;
 

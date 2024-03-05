@@ -36,7 +36,19 @@ export class PagamentoRepository implements PagamentoRepositoryPort {
   async obterPagamentoPorIdDoPedido(
     pedidoId: string,
   ): Promise<PagamentoEntity | null> {
-    return await this.pagamento.findOne<PagamentoEntity>({ pedidoId });
+    return await this.pagamento.findOne<PagamentoEntity>({
+      pedidoId,
+    });
+  }
+
+  async obterPagamentoPorIdDoPedidoEStatus(
+    pedidoId: string,
+    statusPagamentos: StatusPagamento[],
+  ): Promise<PagamentoEntity | null> {
+    return await this.pagamento.findOne<PagamentoEntity>({
+      pedidoId,
+      statusPagamento: { $in: statusPagamentos },
+    });
   }
 
   async atualizarPagamento(

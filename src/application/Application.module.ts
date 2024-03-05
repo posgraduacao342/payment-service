@@ -9,16 +9,22 @@ import { DinheiroStrategy } from 'src/domain/strategies/DinheiroStrategy';
 import { MercadoPagoGatewayPortKey } from 'src/domain/ports/out/MercadoPagoGatewayPort';
 import { MercadoPagoGateway } from './gateway/MercadoPagoGateway';
 import { ObterPagamentosUseCase } from 'src/domain/useCases/ObterPagamentosUseCase';
-import { MercadoPagoModule } from 'src/infrastructure/mercadoPago/MercadoPago.module';
 import { MongoModule } from 'src/infrastructure/db/Mongo.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './controllers/HealthController';
 import { HttpModule } from '@nestjs/axios';
 import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
 import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagamentoPorPedidoIdUseCase';
+import { PagamentoConsumer } from './consumers/PagamentoConsumer';
+import { PagamentoProducerGateway } from './gateway/PagamentoProducerGateway';
+import { PagamentoProducerGatewayPortKey } from 'src/domain/ports/out/PagamentoProducerGatewayPort';
+import { EmailProducerGatewayPortKey } from 'src/domain/ports/out/EmailProducerGatewayPort';
+import { EmailProducerGateway } from './gateway/EmailProducerGateway';
+import { AccountApiGateway } from './gateway/AccountApiGateway';
+import { AccountApiGatewayPorttKey } from 'src/domain/ports/out/AccountApiGatewayPort';
 
 @Module({
-  imports: [MercadoPagoModule, MongoModule, TerminusModule, HttpModule],
+  imports: [MongoModule, TerminusModule, HttpModule],
   controllers: [PagamentoController, HealthController],
   providers: [
     ProcessarPagamentoUseCase,
@@ -28,6 +34,7 @@ import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagam
     ObterPagamentosUseCase,
     ValidarPagamentoMPUseCase,
     ObterPagamentoPorPedidoIdUseCase,
+    PagamentoConsumer,
     {
       provide: PagamentoGatewayPortKey,
       useClass: PagamentoGateway,
@@ -35,6 +42,18 @@ import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagam
     {
       provide: MercadoPagoGatewayPortKey,
       useClass: MercadoPagoGateway,
+    },
+    {
+      provide: PagamentoProducerGatewayPortKey,
+      useClass: PagamentoProducerGateway,
+    },
+    {
+      provide: EmailProducerGatewayPortKey,
+      useClass: EmailProducerGateway,
+    },
+    {
+      provide: AccountApiGatewayPorttKey,
+      useClass: AccountApiGateway,
     },
   ],
 })
