@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: tech-challenge-payment-api
-          image: 851725563168.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
+          image: 767397892937.dkr.ecr.us-east-1.amazonaws.com/payment-service:latest
           ports:
             - containerPort: 3000
           livenessProbe:
@@ -30,26 +30,36 @@ spec:
               cpu: "0.2"
               memory: "256Mi"
           env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: tech-challenge-payment-secret
-                  key: DATABASE_URL
-            - name: MERCADO_PAGO_URL
-              valueFrom:
-                secretKeyRef:
-                  name: tech-challenge-payment-secret
-                  key: MERCADO_PAGO_URL
-            - name: MERCADO_PAGO_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: tech-challenge-payment-secret
-                  key: MERCADO_PAGO_TOKEN
             - name: WEBHOOK_MP_URL
               valueFrom:
                 secretKeyRef:
                   name: tech-challenge-payment-secret
                   key: WEBHOOK_MP_URL
+            - name: MERCADO_PAGO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-payment-secret
+                  key: MERCADO_PAGO_TOKEN
+            - name: MERCADO_PAGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-payment-secret
+                  key: MERCADO_PAGO_URL
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-payment-secret
+                  key: DATABASE_URL
+            - name: AMQP_URL
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-payment-secret
+                  key: AMQP_URL
+            - name: ACCOUNT_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: tech-challenge-payment-secret
+                  key: ACCOUNT_API_URL
   replicas: 1
   selector:
     matchLabels:
