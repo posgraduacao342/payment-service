@@ -50,7 +50,7 @@ export class ProcessarEstornoUseCase {
       );
     }
 
-    pagamento.statusPagamento = StatusPagamento.PAGO;
+    pagamento.statusPagamento = StatusPagamento.ESTORNADO;
     await this.pagamentoGateway.atualizarPagamento(pagamento);
 
     let email = undefined;
