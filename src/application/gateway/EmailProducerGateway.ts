@@ -10,6 +10,17 @@ export class EmailProducerGateway implements EmailProducerGatewayPort {
     this.exchange = 'amq.direct';
   }
 
+  async publicarEmailPagamentoEstornado(email?: string): Promise<void> {
+    if (!email) return;
+
+    const texto = `Seu pedido foi estornado com sucesso!`;
+    await this.amqpConnetion.publish(this.exchange, 'enviar.email', {
+      destinatario: email,
+      texto,
+      assunto: 'Estorno',
+    });
+  }
+
   async publicarEmailPagamentoComSucesso(email?: string): Promise<void> {
     if (!email) return;
 
@@ -42,7 +53,7 @@ export class EmailProducerGateway implements EmailProducerGatewayPort {
     await this.amqpConnetion.publish(this.exchange, 'enviar.email', {
       destinatario: email,
       texto,
-      assunto: 'Pagamento',
+      assunto: 'Pagamento Rejeitado',
     });
   }
 }

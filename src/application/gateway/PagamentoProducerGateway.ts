@@ -10,18 +10,24 @@ export class PagamentoProducerGateway implements PagamentoProducerGatewayPort {
     this.exchange = 'amq.direct';
   }
 
+  async publicarPagamentoEstornado(
+    pedidoId: string,
+    clienteId?: string,
+  ): Promise<void> {
+    await this.amqpConnetion.publish(this.exchange, 'pagamento.estornado', {
+      pedidoId,
+      clienteId,
+    });
+  }
+
   async publicarPagamentoAprovado(
     pedidoId: string,
     clienteId?: string,
   ): Promise<void> {
-    try {
-      await this.amqpConnetion.publish(this.exchange, 'pagamento.aprovado', {
-        pedidoId,
-        clienteId,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    await this.amqpConnetion.publish(this.exchange, 'pagamento.aprovado', {
+      pedidoId,
+      clienteId,
+    });
   }
 
   async publicarPagamentoRejeitado(

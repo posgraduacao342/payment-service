@@ -9,4 +9,9 @@ export interface PagamentoProducerGatewayPort {
     pedidoId: string,
     clienteId?: string,
   ): Promise<void>;
+
+  publicarPagamentoEstornado(
+    pedidoId: string,
+    clienteId?: string,
+  ): Promise<void>;
 }
