@@ -22,6 +22,7 @@ import { EmailProducerGatewayPortKey } from 'src/domain/ports/out/EmailProducerG
 import { EmailProducerGateway } from './gateway/EmailProducerGateway';
 import { AccountApiGateway } from './gateway/AccountApiGateway';
 import { AccountApiGatewayPorttKey } from 'src/domain/ports/out/AccountApiGatewayPort';
+import { ProcessarEstornoUseCase } from 'src/domain/useCases/ProcessarEstornoUseCase';
 
 @Module({
   imports: [MongoModule, TerminusModule, HttpModule],
@@ -34,6 +35,7 @@ import { AccountApiGatewayPorttKey } from 'src/domain/ports/out/AccountApiGatewa
     ObterPagamentosUseCase,
     ValidarPagamentoMPUseCase,
     ObterPagamentoPorPedidoIdUseCase,
+    ProcessarEstornoUseCase,
     PagamentoConsumer,
     {
       provide: PagamentoGatewayPortKey,
