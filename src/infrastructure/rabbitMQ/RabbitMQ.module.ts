@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({ isGlobal: true }),
     RabbitMQModule.forRoot(RabbitMQModule, {
       uri: process.env.AMQP_URL,
+      connectionInitOptions: { wait: false },
     }),
   ],
   exports: [RabbitMQModule],
