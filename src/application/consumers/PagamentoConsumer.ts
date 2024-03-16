@@ -15,6 +15,6 @@ export class PagamentoConsumer {
     routingKey: 'novo.pedido',
   })
   async gerarQRCode(pedido: PedidoDto): Promise<void> {
-    await this.processarPagamentoUseCase.execute(pedido);
+    this.processarPagamentoUseCase.execute(pedido);
   }
 }
