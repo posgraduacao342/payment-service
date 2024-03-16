@@ -60,7 +60,7 @@ spec:
                 secretKeyRef:
                   name: tech-challenge-payment-secret
                   key: ACCOUNT_API_URL
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: tech-challenge-payment
