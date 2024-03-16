@@ -1,4 +1,4 @@
-import { Inject, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { Pedido } from 'src/domain/entities/Pedido';
 import { MercadoPagoGatewayPort } from 'src/domain/ports/out/MercadoPagoGatewayPort';
 import { ItemMP } from 'src/infrastructure/mercadoPago/entities/ItemMp';
@@ -27,7 +27,7 @@ export class MercadoPagoGateway implements MercadoPagoGatewayPort {
         pedidoId: infoPagamento.external_reference,
       };
     } catch (error) {
-      throw new NotFoundException(`Pagamento com o id ${pagamentoId} não foi encontrado no MP`)
+      throw new BadRequestException(`Pagamento com o id ${pagamentoId} não foi encontrado no MP`)
     }
   }
 
