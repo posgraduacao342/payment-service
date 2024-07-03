@@ -63,4 +63,17 @@ export class PagamentoGateway implements PagamentoGatewayPort {
 
     return result ? PagamentoMapper.toDomin(result) : null;
   }
+
+  async obterPagamentoPorIdDoPedidoEStatus(
+    pedidoId: string,
+    statusPagamentos: StatusPagamento[],
+  ): Promise<Pagamento | null> {
+    const result =
+      await this.pagamentoRepository.obterPagamentoPorIdDoPedidoEStatus(
+        pedidoId,
+        statusPagamentos,
+      );
+
+    return result ? PagamentoMapper.toDomin(result) : null;
+  }
 }

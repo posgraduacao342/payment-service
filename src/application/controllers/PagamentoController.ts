@@ -14,12 +14,15 @@ import { ApiTags } from '@nestjs/swagger';
 import { ProcessarPagamentoMPDto } from '../presenters/requests/ProcessarPagamentoMPDto';
 import { ValidarPagamentoMPUseCase } from 'src/domain/useCases/ValidarPagamentoMPUseCase';
 import { ObterPagamentoPorPedidoIdUseCase } from 'src/domain/useCases/ObterPagamentoPorPedidoIdUseCase';
+import { EstornarPedidoDto } from '../presenters/requests/EstornarPedidoDto';
+import { ProcessarEstornoUseCase } from 'src/domain/useCases/ProcessarEstornoUseCase';
 
 @ApiTags('Pagamentos')
 @Controller('pagamentos')
 export class PagamentoController {
   constructor(
     private readonly processarPagamentoUseCase: ProcessarPagamentoUseCase,
+    private readonly processarEstornoUseCase: ProcessarEstornoUseCase,
     private readonly obterPagamentosUseCase: ObterPagamentosUseCase,
     private readonly validarPagamentoMPUseCase: ValidarPagamentoMPUseCase,
     private readonly obterPagamentoPorPedidoIdUseCase: ObterPagamentoPorPedidoIdUseCase,
@@ -28,6 +31,15 @@ export class PagamentoController {
   @Post()
   async processarPagamento(@Body() pedidoDto: PedidoDto): Promise<Pagamento> {
     return await this.processarPagamentoUseCase.execute(pedidoDto);
+  }
+
+  @Post('estorno')
+  async processarEstorno(@Body() estorno: EstornarPedidoDto): Promise<string> {
+    await this.processarEstornoUseCase.execute(
+      estorno.pedidoId,
+      estorno.clienteId,
+    );
+    return 'ok';
   }
 
   @Post('/mercado-pago/webhooks')

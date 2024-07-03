@@ -12,6 +12,7 @@ export class PagamentoMapper {
     pagamento.valorPagamento = pagamentoEntity.valorPagamento;
     pagamento.dataAtualizacao = pagamentoEntity.dataAtualizacao;
     pagamento.dataCriacao = pagamentoEntity.dataCriacao;
+    pagamento.clienteId = pagamentoEntity.clienteId;
 
     return pagamento;
   }
@@ -26,6 +27,7 @@ export class PagamentoMapper {
     pagamentoEntity.valorPagamento = pagamento.valorPagamento;
     pagamentoEntity.dataAtualizacao = pagamento.dataAtualizacao;
     pagamentoEntity.dataCriacao = pagamento.dataCriacao;
+    pagamentoEntity.clienteId = pagamento.clienteId;
 
     return pagamentoEntity;
   }

@@ -40,7 +40,7 @@ export class ItemDto extends Item {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  observacoes: string;
+  observacoes?: string;
 
   @ApiProperty({ type: ProdutoDto })
   @ValidateNested()
@@ -59,6 +59,11 @@ export class PedidoDto extends Pedido {
   @IsUUID()
   @IsNotEmpty()
   id: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  clienteId?: string;
 
   @ApiProperty()
   @IsNumber()

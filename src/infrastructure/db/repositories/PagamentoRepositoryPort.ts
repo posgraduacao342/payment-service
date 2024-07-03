@@ -9,6 +9,10 @@ export interface PagamentoRepositoryPort {
   obterPagamentoPorIdDoPedido(
     pedidoId: string,
   ): Promise<PagamentoEntity | null>;
+  obterPagamentoPorIdDoPedidoEStatus(
+    pedidoId: string,
+    statusPagamentos: StatusPagamento[],
+  ): Promise<PagamentoEntity | null>;
   deletarPagamentoPorId(id: string): Promise<void>;
   obterPagamentos(): Promise<PagamentoEntity[]>;
   atualizarStatusPorPedidoId(

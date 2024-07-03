@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { MercadoPagoPortKey } from './port/MercadoPagoPort';
 import axios from 'axios';
 import { MercadoPagoService } from './service/MercadoPagoService';
 
+@Global()
 @Module({
   providers: [
     {

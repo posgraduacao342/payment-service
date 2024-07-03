@@ -3,7 +3,7 @@ import { Produto } from './Produto';
 export class Item {
   id: string;
   produto: Produto;
-  observacoes: string;
+  observacoes?: string;
   quantidade: number;
 
   calcularTotal(): number {
